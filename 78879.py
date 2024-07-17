@@ -1,12 +1,19 @@
-import random
 
 
-def start_game():# اول از همه برنامه شما یه منو به کاربر نشون میده که توی اون کاربر می‌تونه درجه سختی بازی رو انتخاب کنه
-    level = int(input())
-    return level    
-def level():
+
    
-    if start_game() == 1:
+def Level():
+    level = int(input("\n choose alevel between 1,2 and 3: "))
+
+    while True:
+        if level < 1 or level > 3:
+            level = int(input("wrong\n choose alevel between 1,2 and 3: "))        
+        else:
+            break
+        
+
+   
+    if level == 1:
         board = [[8, 0, 0, 9, 1, 3, 4, 0, 0],            
              [0, 4, 0, 0, 0, 7, 9, 0, 5],  
              [0, 9, 0, 2, 0, 0, 6, 0, 0],  
@@ -16,7 +23,30 @@ def level():
              [4, 0, 7, 1, 0, 0, 0, 0, 0],  
              [0, 8, 0, 4, 7, 9, 0, 3, 0],  
              [9, 0, 0, 0, 3, 0, 0, 6, 4]]  
-   
+        
+    elif level == 2:
+        board = [[2, 0, 0, 0, 4, 0, 0, 5, 7],
+             [0, 0, 1, 0, 0, 8, 0, 0, 0],
+             [4, 0, 6, 0, 0, 0, 1, 3, 0],
+             [0, 3, 5, 0, 0, 6, 0, 0, 0],
+             [0, 7, 9, 4, 8, 5, 2, 1, 0],
+             [0, 2, 4, 1, 3, 0, 6, 9, 5],
+             [0, 0, 2, 7, 1, 0, 0, 0, 0],
+             [0, 0, 0, 8, 0, 2, 0, 6, 1],
+             [5, 0, 0, 0, 0, 0, 7, 0, 0]]
+        
+    elif level == 3:
+        board  = [[0, 0, 0, 7, 0, 0, 0, 0, 0],
+             [8, 0, 2, 0, 6, 9, 0, 0, 0],
+             [0, 0, 5, 2, 8, 0, 0, 0, 0],
+             [0, 0, 5, 2, 8, 0, 0, 0, 0],
+             [0, 1, 3, 8, 0, 0, 5, 0, 9],
+             [0, 0, 0, 0, 0, 0, 8, 0, 1],
+             [0, 0, 4, 0, 1, 0, 6, 7, 0],
+             [3, 7, 0, 9, 2, 0, 0, 0, 0],
+             [4, 0, 9, 0, 0, 0, 0, 6, 0],
+             [0, 0, 0, 3, 4, 0, 9, 0, 8]]
+                          
     return board
 def is_valid_move(board, row, col, num):  #اعتبار سنجی جدول 
     if num in board[row]:  #چک کردن سطر ها
@@ -48,7 +78,7 @@ def iterbord(board):
 
         
 def play_sudoku():   # بازی 
-    board=level()
+    board=Level()
     print("\nEmpty Sudoku Board:")  
     iterbord(board)  
     while not is_winner(board):  
