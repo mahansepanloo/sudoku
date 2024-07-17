@@ -15,14 +15,14 @@ def Level():
    
     if level == 1:
         board = [[8, 0, 0, 9, 1, 3, 4, 0, 0],            
-             [0, 4, 0, 0, 0, 7, 9, 0, 5],  
-             [0, 9, 0, 2, 0, 0, 6, 0, 0],  
-             [6,0, 0, 3, 0, 5, 0, 7, 0],  
-             [1, 5, 0, 0, 2, 0, 3, 0, 9],  
-             [3, 7, 0, 8, 9, 0, 0, 5, 0],  
-             [4, 0, 7, 1, 0, 0, 0, 0, 0],  
-             [0, 8, 0, 4, 7, 9, 0, 3, 0],  
-             [9, 0, 0, 0, 3, 0, 0, 6, 4]]  
+                 [0, 4, 0, 0, 0, 7, 9, 0, 5],  
+                 [0, 9, 0, 2, 0, 0, 6, 0, 0],  
+                 [6, 0, 0, 3, 0, 5, 0, 7, 0],  
+                 [1, 5, 0, 0, 2, 0, 3, 0, 9],  
+                 [3, 7, 0, 8, 9, 0, 0, 5, 0],  
+                 [4, 0, 7, 1, 0, 0, 0, 0, 0],  
+                 [0, 8, 0, 4, 7, 9, 0, 3, 0],  
+                 [9, 0, 0, 0, 3, 0, 0, 6, 4]]  
         
     elif level == 2:
         board = [[2, 0, 0, 0, 4, 0, 0, 5, 7],
@@ -77,20 +77,22 @@ def iterbord(board):
     for row in board:  
         print (row)
 
-def find_conflict(board, num):  
+def find_conflict(board, num, row, col):  
     for i in range(9):  
-        if num in board[i]:  # چک کردن در سطر ها  
-            row = i + 1  # شماره سطر  
-            col = board[i].index(num) + 1  # شماره ستون  
-            print(f"!!!!!!!!!!Invalid move.!!!!!!!!!!!!!!! The number {num}  in row *{row}* or column *{col}*. Please try again.")  
-            break
+        if i == row - 1:
+            if num in board[i]:  # چک کردن در سطر ها  
+                roww = i + 1  # شماره سطر  
+                coll = board[i].index(num) + 1  # شماره ستون  
+                print(f"!!!!!!!!!!Invalid move.!!!!!!!!!!!!!!! The number {num}  in row *{roww}* or column *{coll}*. Please try again.")  
+                break
     
-    for j in range(9):  
-        if num in [board[i][j] for i in range(9)]:  # چک کردن در ستون ها  
-            row = [board[i][j] for i in range(9)].index(num) + 1  # شماره سطر  
-            col = j + 1  # شماره ستون  
-            print(f"!!!!!!!!!!Invalid move.!!!!!!!!!!!!!!! The number {num}  in row *{row}* or column *{col}*. Please try again.")  
-            break
+    for j in range(9): 
+        if j == col - 1: 
+            if num in [board[i][j] for i in range(9)]:  # چک کردن در ستون ها  
+                roww = [board[i][j] for i in range(9)].index(num) + 1  # شماره سطر  
+                coll = j + 1  # شماره ستون  
+                print(f"!!!!!!!!!!Invalid move.!!!!!!!!!!!!!!! The number {num}  in row *{roww}* or column *{coll}*. Please try again.")  
+                break
     for i in range(0, 9, 3):  
         for j in range(0, 9, 3):  
             if num in [board[r][c] for r in range(i, i+3) for c in range(j, j+3)]:  
@@ -107,9 +109,9 @@ def play_sudoku():   # بازی
         row = int(input("Enter row number (1-9): ")) - 1  
         col = int(input("Enter column number (1-9): ")) - 1  
         num = int(input("Enter number to fill (1-9): ")) 
-        conflict = find_conflict(board, num)  
+        conflict = find_conflict(board, num, row, col)  
         if conflict:  
-            print(f"Conflict with row {conflict[0]} and column {conflict[1]}. Please select a different number.")
+            print(f"Conflict with row {conflict} and column {conflict}. Please select a different number.")
         if is_valid_move(board, row, col, num):  
             board[row][col] = num  
 
