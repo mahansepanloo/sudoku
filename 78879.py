@@ -3,7 +3,7 @@
 
    
 def Level():
-    level = int(input("\n choose alevel between 1,2 and 3: "))
+    level = 1
 
     while True:
         if level < 1 or level > 3:
@@ -50,6 +50,7 @@ def Level():
     return board
 def is_valid_move(board, row, col, num):  #اعتبار سنجی جدول 
     if num in board[row]:  #چک کردن سطر ها
+        # print(f"row!!!{board[row].index(num)+1}")
         return False  
 
     if num in [board[i][col] for i in range(9)]:   #چک کردن ستون ها
@@ -76,7 +77,28 @@ def iterbord(board):
     for row in board:  
         print (row)
 
-        
+def find_conflict(board, num):  
+    for i in range(9):  
+        if num in board[i]:  # چک کردن در سطر ها  
+            row = i + 1  # شماره سطر  
+            col = board[i].index(num) + 1  # شماره ستون  
+            print(f"!!!!!!!!!!Invalid move.!!!!!!!!!!!!!!! The number {num}  in row *{row}* or column *{col}*. Please try again.")  
+            break
+    
+    for j in range(9):  
+        if num in [board[i][j] for i in range(9)]:  # چک کردن در ستون ها  
+            row = [board[i][j] for i in range(9)].index(num) + 1  # شماره سطر  
+            col = j + 1  # شماره ستون  
+            print(f"!!!!!!!!!!Invalid move.!!!!!!!!!!!!!!! The number {num}  in row *{row}* or column *{col}*. Please try again.")  
+            break
+    for i in range(0, 9, 3):  
+        for j in range(0, 9, 3):  
+            if num in [board[r][c] for r in range(i, i+3) for c in range(j, j+3)]:  
+                row = [board[r][c] for r in range(i, i+3) for c in range(j, j+3)].index(num) // 3 + i + 1  # شماره سطر  
+                col = [board[r][c] for r in range(i, i+3) for c in range(j, j+3)].index(num) % 3 + j + 1  # شماره ستون  
+            print(f"!!!!!!!!!!Invalid move.!!!!!!!!!!!!!!! The number {num}  in row *{row}* or column *{col}*. Please try again.")  
+            break
+    return None
 def play_sudoku():   # بازی 
     board=Level()
     print("\nEmpty Sudoku Board:")  
@@ -85,11 +107,12 @@ def play_sudoku():   # بازی
         row = int(input("Enter row number (1-9): ")) - 1  
         col = int(input("Enter column number (1-9): ")) - 1  
         num = int(input("Enter number to fill (1-9): ")) 
-         
+        conflict = find_conflict(board, num)  
+        if conflict:  
+            print(f"Conflict with row {conflict[0]} and column {conflict[1]}. Please select a different number.")
         if is_valid_move(board, row, col, num):  
             board[row][col] = num  
-        else:  
-            print(f"!!!!!!!!!!Invalid move.!!!!!!!!!!!!!!! The number {num}  in row *{row+1}* or column *{col+1}*. Please try again.")  
+
         print("Updated Sudoku Board:")  
         iterbord(board)  
     print("amazing! You have won the game!")  
