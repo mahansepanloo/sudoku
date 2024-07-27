@@ -1,8 +1,12 @@
 from datetime import datetime
+
+
+
+
 def Level():
     level = int(input("choose alevel between 1,2 and 3: "))       
     while True:
-        if level < 0 or level > 3:
+        if level < 1 or level > 3:
             level = int(input("wrong\n choose alevel between 1,2 and 3: "))        
         else:
             break
@@ -84,102 +88,34 @@ def iterbord(board):
     for row in board:  
         yield (row)
 
-def check_conflict(board, row, col, num):  
-    conflicts = {
-        "row":[],
-        "col":[],
-        "Square":[]
-    }
+def solve(board = None, row = None, col = None):
 
-    for i in range(9):  
-        if board[row][i] == num:  
-            conflicts["row"].append((row+1, i+1))  
+    if col == 9:
+        if row == 8:
+            return True
+        row += 1
+        col = 0
+    if board[row][col] > 0:
+        return solve(board, row, col + 1)
+   
+    for num in range(1, 10):
+        if is_valid_move(board, row, col, num):
 
-    for i in range(9):  
-        if board[i][col] == num:  
-            conflicts["col"].append((i+1, col+1))  
+            board[row][col] = num
 
-    
-    square_row = ((row) // 3) * 3  
-    square_col = ((col) // 3) * 3  
+            if solve(board, row, col + 1):
+                return True
+       
+        board[row][col] = 0
+    return False
 
-    for i in range(3):  
-        for j in range(3):  
-            if board[square_row + i][square_col + j] == num:  
-                conflicts["Square"].append((square_row + i+1, square_col + j+1))  
+board = Level()
 
-    return conflicts  
+if solve(board, 0, 0):
+    for i in range(9):
+        for j in range(9):
+            print(board[i][j], end=" ")
+        print()
+else:
+    print("No Solution")
 
-    
-
-def play_sudoku():   # بازی 
-    t1 = datetime.now()
-    board=Level()
-    print("\nEmpty Sudoku Board:")  
-    print(f"""
-        {board[0][0]} {board[0][1]} {board[0][2]} | {board[0][3]}  {board[0][4]}  {board[0][5]} | {board[0][6]}  {board[0][7]}  {board[0][8]} 
-        {board[1][0]} {board[1][1]} {board[1][2]} | {board[1][3]}  {board[1][4]}  {board[1][5]} | {board[1][6]}  {board[1][7]}  {board[1][8]} 
-        {board[2][0]} {board[2][1]} {board[2][2]} | {board[2][3]}  {board[2][4]}  {board[2][5]} | {board[2][6]}  {board[2][7]}  {board[2][8]} 
-        -------------------------
-        {board[3][0]} {board[3][1]} {board[3][2]} | {board[3][3]}  {board[3][4]}  {board[3][5]} | {board[3][6]}  {board[3][7]}  {board[3][8]} 
-        {board[4][0]} {board[4][1]} {board[4][2]} | {board[4][3]}  {board[4][4]}  {board[4][5]} | {board[4][6]}  {board[4][7]}  {board[4][8]} 
-        {board[5][0]} {board[5][1]} {board[5][2]} | {board[5][3]}  {board[5][4]}  {board[5][5]} | {board[5][6]}  {board[5][7]}  {board[5][8]} 
-        -------------------------
-        {board[6][0]} {board[6][1]} {board[6][2]} | {board[6][3]}  {board[6][4]}  {board[6][5]} | {board[6][6]}  {board[6][7]}  {board[6][8]} 
-        {board[7][0]} {board[7][1]} {board[7][2]} | {board[7][3]}  {board[7][4]}  {board[7][5]} | {board[7][6]}  {board[7][7]}  {board[7][8]} 
-        {board[8][0]} {board[8][1]} {board[8][2]} | {board[8][3]}  {board[8][4]}  {board[8][5]} | {board[8][6]}  {board[8][7]}  {board[8][8]} 
-
-""")
-    iterbord(board)  
-    
-    while not is_winner(board):  
-        row = (input("Enter row number (1-9): ")) 
-        col = (input("Enter column number (1-9): "))  
-        num = (input("Enter number to fill (1-9): ")) 
-        if row.isdigit() and col.isdigit() and num.isdigit():
-            row = int(row)-1
-            col = int(col)-1
-            num = int(num)
-            if 0 <= row < 9 and 0 <= col < 9 and 1 <= num <= 9:
-                 pass
-            else:
-                print("Please enter numbers within the range (1-9).")
-                continue
-        else:
-            print("Please enter numeric values.")
-            continue
-
-        if board[row][col] != 0:
-            print(f'you cant change row {row + 1} and col {col + 1}')
-            continue
-
-
-        if is_valid_move(board, row, col, num):  
-            board[row][col] = num  
-            print("Updated Sudoku Board:") 
-
-        else:
-            conflicts = check_conflict(board, row, col, num)  
-            if conflicts:  
-                print(f"Conflict found for number {num} at row {row+1} and column {col+1} whit : {conflicts}")
-
-        print(f"""
-        {board[0][0]} {board[0][1]} {board[0][2]} | {board[0][3]}  {board[0][4]}  {board[0][5]} | {board[0][6]}  {board[0][7]}  {board[0][8]} 
-        {board[1][0]} {board[1][1]} {board[1][2]} | {board[1][3]}  {board[1][4]}  {board[1][5]} | {board[1][6]}  {board[1][7]}  {board[1][8]} 
-        {board[2][0]} {board[2][1]} {board[2][2]} | {board[2][3]}  {board[2][4]}  {board[2][5]} | {board[2][6]}  {board[2][7]}  {board[2][8]} 
-        -------------------------
-        {board[3][0]} {board[3][1]} {board[3][2]} | {board[3][3]}  {board[3][4]}  {board[3][5]} | {board[3][6]}  {board[3][7]}  {board[3][8]} 
-        {board[4][0]} {board[4][1]} {board[4][2]} | {board[4][3]}  {board[4][4]}  {board[4][5]} | {board[4][6]}  {board[4][7]}  {board[4][8]} 
-        {board[5][0]} {board[5][1]} {board[5][2]} | {board[5][3]}  {board[5][4]}  {board[5][5]} | {board[5][6]}  {board[5][7]}  {board[5][8]} 
-        -------------------------
-        {board[6][0]} {board[6][1]} {board[6][2]} | {board[6][3]}  {board[6][4]}  {board[6][5]} | {board[6][6]}  {board[6][7]}  {board[6][8]} 
-        {board[7][0]} {board[7][1]} {board[7][2]} | {board[7][3]}  {board[7][4]}  {board[7][5]} | {board[7][6]}  {board[7][7]}  {board[7][8]} 
-        {board[8][0]} {board[8][1]} {board[8][2]} | {board[8][3]}  {board[8][4]}  {board[8][5]} | {board[8][6]}  {board[8][7]}  {board[8][8]} 
-
-""") 
-        iterbord(board)  
-    print("amazing! You have won the game!")  
-    t2 = datetime.now()
-    T =t2 - t1
-    print(f'Game duration:{T}')
-play_sudoku()
